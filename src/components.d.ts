@@ -17,12 +17,14 @@ export namespace Components {
          * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
          */
         "first-object"?: any;
+        "index": number;
         "secondObject": any;
         /**
          * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
          */
         "second-object"?: any;
-        "segment": { message: string; condition?: string };
+        "segment": { message: string; condition?: string; draggable?: boolean };
+        "values": { [key: string]: string };
     }
     interface MyComponent {
         /**
@@ -42,6 +44,10 @@ export namespace Components {
         "secondObject": { id: number; amount: number; status: 'proceed' | 'stop' | 'review'; reason: 'missing' | 'invalid' | 'duplicate' };
     }
 }
+export interface MessageSegmentCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMessageSegmentElement;
+}
 declare global {
     interface HTMLFirstObjectComponentElement extends Components.FirstObjectComponent, HTMLStencilElement {
     }
@@ -55,7 +61,20 @@ declare global {
         prototype: HTMLMainRenderElement;
         new (): HTMLMainRenderElement;
     };
+    interface HTMLMessageSegmentElementEventMap {
+        "segmentDragStart": number;
+        "segmentDrop": { fromIndex: number; toIndex: number };
+        "inputChange": { key: string; value: string };
+    }
     interface HTMLMessageSegmentElement extends Components.MessageSegment, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMessageSegmentElementEventMap>(type: K, listener: (this: HTMLMessageSegmentElement, ev: MessageSegmentCustomEvent<HTMLMessageSegmentElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMessageSegmentElementEventMap>(type: K, listener: (this: HTMLMessageSegmentElement, ev: MessageSegmentCustomEvent<HTMLMessageSegmentElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMessageSegmentElement: {
         prototype: HTMLMessageSegmentElement;
@@ -93,12 +112,17 @@ declare namespace LocalJSX {
          * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
          */
         "first-object"?: any;
+        "index"?: number;
+        "onInputChange"?: (event: MessageSegmentCustomEvent<{ key: string; value: string }>) => void;
+        "onSegmentDragStart"?: (event: MessageSegmentCustomEvent<number>) => void;
+        "onSegmentDrop"?: (event: MessageSegmentCustomEvent<{ fromIndex: number; toIndex: number }>) => void;
         "secondObject"?: any;
         /**
          * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
          */
         "second-object"?: any;
-        "segment"?: { message: string; condition?: string };
+        "segment"?: { message: string; condition?: string; draggable?: boolean };
+        "values"?: { [key: string]: string };
     }
     interface MyComponent {
         /**

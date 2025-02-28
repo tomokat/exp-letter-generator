@@ -1,4 +1,4 @@
-import { Component, Prop, State, h } from '@stencil/core';
+import { Component, Prop, State, h, Event, EventEmitter } from '@stencil/core';
 
 @Component({
   tag: 'message-segment',
@@ -6,42 +6,19 @@ import { Component, Prop, State, h } from '@stencil/core';
   shadow: true,
 })
 export class MessageSegment {
-  @Prop() segment: { message: string; condition?: string };
+  @Prop() segment: { message: string; condition?: string; draggable?: boolean };
   @Prop() firstObject: any;
   @Prop() secondObject: any;
+  @Prop() index: number;
+  @Prop() values: { [key: string]: string };
   @State() isEditMode: boolean = false;
-  @State() values: { [key: string]: string } = {};
-  @State() originalValues: { [key: string]: string } = {};
 
-  componentWillLoad() {
-    this.initializeValues();
-  }
-
-  initializeValues() {
-    const message = this.segment.message;
-    const regex = /\${(.*?)}/g;
-    let match;
-    while ((match = regex.exec(message)) !== null) {
-      const key = match[1];
-      const value = this.getValueForKey(key);
-      this.values[key] = value;
-      this.originalValues[key] = value;
-      console.log(`Initialized ${key} with value: ${value}`); // Debugging statement
-    }
-  }
-
-  getValueForKey(key: string): string {
-    const [objectName, propertyName] = key.split('.');
-    if (objectName === 'firstObject') {
-      return this.firstObject[propertyName];
-    } else if (objectName === 'secondObject') {
-      return this.secondObject[propertyName];
-    }
-    return '';
-  }
+  @Event() segmentDragStart: EventEmitter<number>;
+  @Event() segmentDrop: EventEmitter<{ fromIndex: number; toIndex: number }>;
+  @Event() inputChange: EventEmitter<{ key: string; value: string }>;
 
   handleInputChange(event, key) {
-    this.values = { ...this.values, [key]: event.target.value };
+    this.inputChange.emit({ key, value: event.target.value });
   }
 
   evaluateCondition(condition: string): boolean {
@@ -55,6 +32,22 @@ export class MessageSegment {
 
   toggleEditMode() {
     this.isEditMode = !this.isEditMode;
+  }
+
+  handleDragStart(event) {
+    event.dataTransfer.setData('text/plain', this.index.toString());
+    this.segmentDragStart.emit(this.index);
+  }
+
+  handleDrop(event) {
+    event.preventDefault();
+    const fromIndex = parseInt(event.dataTransfer.getData('text/plain'), 10);
+    const toIndex = this.index;
+    this.segmentDrop.emit({ fromIndex, toIndex });
+  }
+
+  handleDragOver(event) {
+    event.preventDefault();
   }
 
   renderMessage() {
@@ -86,8 +79,18 @@ export class MessageSegment {
       return null;
     }
 
+    const segmentClass = this.segment.draggable ? 'segment' : 'segment fixed';
+
     return (
-      <div class="segment" onClick={() => this.toggleEditMode()}>
+      <div
+        class={segmentClass}
+        onClick={() => this.toggleEditMode()}
+        draggable={this.segment.draggable}
+        onDragStart={(event) => this.handleDragStart(event)}
+        onDrop={(event) => this.handleDrop(event)}
+        onDragOver={(event) => this.handleDragOver(event)}
+        data-index={this.index}
+      >
         {this.renderMessage()}
       </div>
     );
