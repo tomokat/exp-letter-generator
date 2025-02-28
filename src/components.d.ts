@@ -6,9 +6,6 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-    interface FirstObjectComponent {
-        "firstObject": { name: string; refId: number; type: 'claim' | 'normal' | 'promotion'; urgency: 'high' | 'medium' | 'low' };
-    }
     interface MainRender {
     }
     interface MessageSegment {
@@ -26,35 +23,12 @@ export namespace Components {
         "segment": { message: string; condition?: string; draggable?: boolean };
         "values": { [key: string]: string };
     }
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first": string;
-        /**
-          * The last name
-         */
-        "last": string;
-        /**
-          * The middle name
-         */
-        "middle": string;
-    }
-    interface SecondObjectComponent {
-        "secondObject": { id: number; amount: number; status: 'proceed' | 'stop' | 'review'; reason: 'missing' | 'invalid' | 'duplicate' };
-    }
 }
 export interface MessageSegmentCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMessageSegmentElement;
 }
 declare global {
-    interface HTMLFirstObjectComponentElement extends Components.FirstObjectComponent, HTMLStencilElement {
-    }
-    var HTMLFirstObjectComponentElement: {
-        prototype: HTMLFirstObjectComponentElement;
-        new (): HTMLFirstObjectComponentElement;
-    };
     interface HTMLMainRenderElement extends Components.MainRender, HTMLStencilElement {
     }
     var HTMLMainRenderElement: {
@@ -80,30 +54,12 @@ declare global {
         prototype: HTMLMessageSegmentElement;
         new (): HTMLMessageSegmentElement;
     };
-    interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
-    }
-    var HTMLMyComponentElement: {
-        prototype: HTMLMyComponentElement;
-        new (): HTMLMyComponentElement;
-    };
-    interface HTMLSecondObjectComponentElement extends Components.SecondObjectComponent, HTMLStencilElement {
-    }
-    var HTMLSecondObjectComponentElement: {
-        prototype: HTMLSecondObjectComponentElement;
-        new (): HTMLSecondObjectComponentElement;
-    };
     interface HTMLElementTagNameMap {
-        "first-object-component": HTMLFirstObjectComponentElement;
         "main-render": HTMLMainRenderElement;
         "message-segment": HTMLMessageSegmentElement;
-        "my-component": HTMLMyComponentElement;
-        "second-object-component": HTMLSecondObjectComponentElement;
     }
 }
 declare namespace LocalJSX {
-    interface FirstObjectComponent {
-        "firstObject"?: { name: string; refId: number; type: 'claim' | 'normal' | 'promotion'; urgency: 'high' | 'medium' | 'low' };
-    }
     interface MainRender {
     }
     interface MessageSegment {
@@ -124,40 +80,17 @@ declare namespace LocalJSX {
         "segment"?: { message: string; condition?: string; draggable?: boolean };
         "values"?: { [key: string]: string };
     }
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first"?: string;
-        /**
-          * The last name
-         */
-        "last"?: string;
-        /**
-          * The middle name
-         */
-        "middle"?: string;
-    }
-    interface SecondObjectComponent {
-        "secondObject"?: { id: number; amount: number; status: 'proceed' | 'stop' | 'review'; reason: 'missing' | 'invalid' | 'duplicate' };
-    }
     interface IntrinsicElements {
-        "first-object-component": FirstObjectComponent;
         "main-render": MainRender;
         "message-segment": MessageSegment;
-        "my-component": MyComponent;
-        "second-object-component": SecondObjectComponent;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "first-object-component": LocalJSX.FirstObjectComponent & JSXBase.HTMLAttributes<HTMLFirstObjectComponentElement>;
             "main-render": LocalJSX.MainRender & JSXBase.HTMLAttributes<HTMLMainRenderElement>;
             "message-segment": LocalJSX.MessageSegment & JSXBase.HTMLAttributes<HTMLMessageSegmentElement>;
-            "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
-            "second-object-component": LocalJSX.SecondObjectComponent & JSXBase.HTMLAttributes<HTMLSecondObjectComponentElement>;
         }
     }
 }

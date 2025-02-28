@@ -13,7 +13,7 @@ export class MainRender {
     { message: 'With regards to your ${firstObject.refId} of your ${firstObject.type}', draggable: true },
     { message: 'We will be shortly reaching out to you', condition: "firstObject.type === 'claim' && secondObject.status === 'proceed'", draggable: true },
     { message: 'We are sorry to inform you that we cannot process your claim due to ${secondObject.reason}', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true },
-    { message: 'Please send us copy of receipt matching your purchase amount of ${secondObject.amount} and we will process your claim as quickly as we can', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true },
+    { message: 'Please send us copy of receipt matching your purchase amount of $${secondObject.amount} and we will process your claim as quickly as we can', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true },
     { message: 'We would like to inform you that your ${firstObject.refId} is in process', condition: "firstObject.type === 'normal'", draggable: true },
     { message: 'We want to let you know this great opportunity with you today', condition: "firstObject.type === 'review'", draggable: true },
     { message: 'Thank you for your time', draggable: false }
