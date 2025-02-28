@@ -9,14 +9,14 @@ export class MainRender {
   @State() firstObject = { name: 'John Doe', refId: 123, type: 'claim', urgency: 'high' };
   @State() secondObject = { id: 456, amount: 1000, status: 'stop', reason: 'missing information' };
   @State() segments = [
-    { message: 'Hello ${firstObject.name},', draggable: false, removable: false },
-    { message: 'With regards to your ${firstObject.refId} of your ${firstObject.type}', draggable: true, removable: true },
-    { message: 'We will be shortly reaching out to you', condition: "firstObject.type === 'claim' && secondObject.status === 'proceed'", draggable: true, removable: true },
-    { message: 'We are sorry to inform you that we cannot process your claim due to ${secondObject.reason}', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true, removable: true },
-    { message: 'Please send us copy of receipt matching your purchase amount of $${secondObject.amount} and we will process your claim as quickly as we can', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true, removable: true },
-    { message: 'We would like to inform you that your ${firstObject.refId} is in process', condition: "firstObject.type === 'normal'", draggable: true, removable: true },
-    { message: 'We want to let you know this great opportunity with you today', condition: "firstObject.type === 'review'", draggable: true, removable: true },
-    { message: 'Thank you for your time', draggable: false, removable: false }
+    { message: 'Hello ${firstObject.name},', fr_message: 'Bonjour ${firstObject.name},', draggable: false, removable: false },
+    { message: 'With regards to your ${firstObject.refId} of your ${firstObject.type}', fr_message: 'En ce qui concerne votre ${firstObject.refId} de votre ${firstObject.type}', draggable: true, removable: true },
+    { message: 'We will be shortly reaching out to you', fr_message: 'Nous vous contacterons sous peu', condition: "firstObject.type === 'claim' && secondObject.status === 'proceed'", draggable: true, removable: true },
+    { message: 'We are sorry to inform you that we cannot process your claim due to ${secondObject.reason}', fr_message: 'Nous sommes désolés de vous informer que nous ne pouvons pas traiter votre réclamation en raison de ${secondObject.reason}', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true, removable: true },
+    { message: 'Please send us copy of receipt matching your purchase amount of $${secondObject.amount} and we will process your claim as quickly as we can', fr_message: 'Veuillez nous envoyer une copie du reçu correspondant à votre montant d\'achat de $${secondObject.amount} et nous traiterons votre réclamation dès que possible', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true, removable: true },
+    { message: 'We would like to inform you that your ${firstObject.refId} is in process', fr_message: 'Nous souhaitons vous informer que votre ${firstObject.refId} est en cours de traitement', condition: "firstObject.type === 'normal'", draggable: true, removable: true },
+    { message: 'We want to let you know this great opportunity with you today', fr_message: 'Nous voulons vous faire part de cette grande opportunité aujourd\'hui', condition: "firstObject.type === 'review'", draggable: true, removable: true },
+    { message: 'Thank you for your time', fr_message: 'Merci pour votre temps', draggable: false, removable: false }
   ];
   @State() values: { [key: string]: string }[] = [];
 

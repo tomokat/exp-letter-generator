@@ -6,7 +6,7 @@ import { Component, Prop, State, h, Event, EventEmitter } from '@stencil/core';
   shadow: true,
 })
 export class MessageSegment {
-  @Prop() segment: { message: string; condition?: string; draggable?: boolean; removable?: boolean };
+  @Prop() segment: { message: string; fr_message: string; condition?: string; draggable?: boolean; removable?: boolean };
   @Prop() firstObject: any;
   @Prop() secondObject: any;
   @Prop() index: number;
@@ -65,8 +65,14 @@ export class MessageSegment {
     this.deleteSegment.emit(this.index);
   }
 
+  getMessage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const lang = urlParams.get('lang');
+    return lang === 'fr' ? this.segment.fr_message : this.segment.message;
+  }
+
   renderMessage() {
-    const message = this.segment.message;
+    const message = this.getMessage();
     const regex = /\${(.*?)}/g;
     const parts = [];
     let lastIndex = 0;

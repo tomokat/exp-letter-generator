@@ -20,7 +20,7 @@ export namespace Components {
          * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
          */
         "second-object"?: any;
-        "segment": { message: string; condition?: string; draggable?: boolean; removable?: boolean };
+        "segment": { message: string; fr_message: string; condition?: string; draggable?: boolean; removable?: boolean };
         "values": { [key: string]: string };
     }
     interface PreviewRender {
@@ -34,7 +34,7 @@ export namespace Components {
          * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
          */
         "second-object"?: any;
-        "segments": { message: string; condition?: string; draggable?: boolean }[];
+        "segments": { message: string; fr_message: string; condition?: string; draggable?: boolean }[];
         "values": { [key: string]: string }[];
     }
 }
@@ -100,7 +100,7 @@ declare namespace LocalJSX {
          * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
          */
         "second-object"?: any;
-        "segment"?: { message: string; condition?: string; draggable?: boolean; removable?: boolean };
+        "segment"?: { message: string; fr_message: string; condition?: string; draggable?: boolean; removable?: boolean };
         "values"?: { [key: string]: string };
     }
     interface PreviewRender {
@@ -114,7 +114,7 @@ declare namespace LocalJSX {
          * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
          */
         "second-object"?: any;
-        "segments"?: { message: string; condition?: string; draggable?: boolean }[];
+        "segments"?: { message: string; fr_message: string; condition?: string; draggable?: boolean }[];
         "values"?: { [key: string]: string }[];
     }
     interface IntrinsicElements {

@@ -6,7 +6,7 @@ import { Component, Prop, h } from '@stencil/core';
   shadow: true,
 })
 export class PreviewRender {
-  @Prop() segments: { message: string; condition?: string; draggable?: boolean }[];
+  @Prop() segments: { message: string; fr_message: string; condition?: string; draggable?: boolean }[];
   @Prop() firstObject: any;
   @Prop() secondObject: any;
   @Prop() values: { [key: string]: string }[];
@@ -20,8 +20,14 @@ export class PreviewRender {
     }
   }
 
+  getMessage(segment) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const lang = urlParams.get('lang');
+    return lang === 'fr' ? segment.fr_message : segment.message;
+  }
+
   renderMessage(segment, index) {
-    const message = segment.message;
+    const message = this.getMessage(segment);
     const regex = /\${(.*?)}/g;
     const parts = [];
     let lastIndex = 0;
