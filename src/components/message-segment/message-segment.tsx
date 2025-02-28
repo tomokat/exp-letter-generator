@@ -50,6 +50,10 @@ export class MessageSegment {
     event.preventDefault();
   }
 
+  stopPropagation(event) {
+    event.stopPropagation();
+  }
+
   renderMessage() {
     const message = this.segment.message;
     const regex = /\${(.*?)}/g;
@@ -62,7 +66,7 @@ export class MessageSegment {
       parts.push(message.substring(lastIndex, match.index));
       parts.push(
         this.isEditMode ? (
-          <input type="text" value={this.values[key]} onInput={(event) => this.handleInputChange(event, key)} />
+          <input type="text" value={this.values[key]} onInput={(event) => this.handleInputChange(event, key)} onClick={(event) => this.stopPropagation(event)} />
         ) : (
           <span>{this.values[key]}</span>
         )

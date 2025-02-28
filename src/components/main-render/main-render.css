@@ -1,1 +1,12 @@
-/* Add your styles here */
+.container {
+  display: flex;
+}
+
+.column {
+  flex: 1;
+  padding: 10px;
+}
+
+.column:first-child {
+  border-right: 1px solid #ddd;
+}

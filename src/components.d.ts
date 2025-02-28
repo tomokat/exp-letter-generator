@@ -23,6 +23,20 @@ export namespace Components {
         "segment": { message: string; condition?: string; draggable?: boolean };
         "values": { [key: string]: string };
     }
+    interface PreviewRender {
+        "firstObject": any;
+        /**
+         * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
+         */
+        "first-object"?: any;
+        "secondObject": any;
+        /**
+         * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
+         */
+        "second-object"?: any;
+        "segments": { message: string; condition?: string; draggable?: boolean }[];
+        "values": { [key: string]: string }[];
+    }
 }
 export interface MessageSegmentCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -54,9 +68,16 @@ declare global {
         prototype: HTMLMessageSegmentElement;
         new (): HTMLMessageSegmentElement;
     };
+    interface HTMLPreviewRenderElement extends Components.PreviewRender, HTMLStencilElement {
+    }
+    var HTMLPreviewRenderElement: {
+        prototype: HTMLPreviewRenderElement;
+        new (): HTMLPreviewRenderElement;
+    };
     interface HTMLElementTagNameMap {
         "main-render": HTMLMainRenderElement;
         "message-segment": HTMLMessageSegmentElement;
+        "preview-render": HTMLPreviewRenderElement;
     }
 }
 declare namespace LocalJSX {
@@ -80,9 +101,24 @@ declare namespace LocalJSX {
         "segment"?: { message: string; condition?: string; draggable?: boolean };
         "values"?: { [key: string]: string };
     }
+    interface PreviewRender {
+        "firstObject"?: any;
+        /**
+         * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
+         */
+        "first-object"?: any;
+        "secondObject"?: any;
+        /**
+         * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
+         */
+        "second-object"?: any;
+        "segments"?: { message: string; condition?: string; draggable?: boolean }[];
+        "values"?: { [key: string]: string }[];
+    }
     interface IntrinsicElements {
         "main-render": MainRender;
         "message-segment": MessageSegment;
+        "preview-render": PreviewRender;
     }
 }
 export { LocalJSX as JSX };
@@ -91,6 +127,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "main-render": LocalJSX.MainRender & JSXBase.HTMLAttributes<HTMLMainRenderElement>;
             "message-segment": LocalJSX.MessageSegment & JSXBase.HTMLAttributes<HTMLMessageSegmentElement>;
+            "preview-render": LocalJSX.PreviewRender & JSXBase.HTMLAttributes<HTMLPreviewRenderElement>;
         }
     }
 }

@@ -76,21 +76,26 @@ export class MainRender {
     }
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {this.segments.map((segment, index) => (
-          <div>
-            <message-segment
-              segment={segment}
-              firstObject={this.firstObject}
-              secondObject={this.secondObject}
-              index={index}
-              values={this.values[index]}
-              onSegmentDragStart={(event) => this.handleSegmentDragStart(event)}
-              onSegmentDrop={(event) => this.handleSegmentDrop(event)}
-              onInputChange={(event) => this.handleInputChange(index, event.detail.key, event.detail.value)}
-            ></message-segment>
-          </div>
-        ))}
+      <div class="container">
+        <div class="column">
+          {this.segments.map((segment, index) => (
+            <div>
+              <message-segment
+                segment={segment}
+                firstObject={this.firstObject}
+                secondObject={this.secondObject}
+                index={index}
+                values={this.values[index]}
+                onSegmentDragStart={(event) => this.handleSegmentDragStart(event)}
+                onSegmentDrop={(event) => this.handleSegmentDrop(event)}
+                onInputChange={(event) => this.handleInputChange(index, event.detail.key, event.detail.value)}
+              ></message-segment>
+            </div>
+          ))}
+        </div>
+        <div class="column">
+          <preview-render segments={this.segments} firstObject={this.firstObject} secondObject={this.secondObject} values={this.values}></preview-render>
+        </div>
       </div>
     );
   }
