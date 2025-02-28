@@ -6,7 +6,7 @@ import { Component, Prop, State, h, Event, EventEmitter } from '@stencil/core';
   shadow: true,
 })
 export class MessageSegment {
-  @Prop() segment: { message: string; condition?: string; draggable?: boolean };
+  @Prop() segment: { message: string; condition?: string; draggable?: boolean; removable?: boolean };
   @Prop() firstObject: any;
   @Prop() secondObject: any;
   @Prop() index: number;
@@ -16,9 +16,16 @@ export class MessageSegment {
   @Event() segmentDragStart: EventEmitter<number>;
   @Event() segmentDrop: EventEmitter<{ fromIndex: number; toIndex: number }>;
   @Event() inputChange: EventEmitter<{ key: string; value: string }>;
+  @Event() deleteSegment: EventEmitter<number>;
 
   handleInputChange(event, key) {
     this.inputChange.emit({ key, value: event.target.value });
+  }
+
+  handleKeyDown(event) {
+    if (event.key === 'Enter') {
+      this.toggleEditMode();
+    }
   }
 
   evaluateCondition(condition: string): boolean {
@@ -54,6 +61,10 @@ export class MessageSegment {
     event.stopPropagation();
   }
 
+  handleDelete() {
+    this.deleteSegment.emit(this.index);
+  }
+
   renderMessage() {
     const message = this.segment.message;
     const regex = /\${(.*?)}/g;
@@ -66,7 +77,7 @@ export class MessageSegment {
       parts.push(message.substring(lastIndex, match.index));
       parts.push(
         this.isEditMode ? (
-          <input type="text" value={this.values[key]} onInput={(event) => this.handleInputChange(event, key)} onClick={(event) => this.stopPropagation(event)} />
+          <input type="text" value={this.values[key]} onInput={(event) => this.handleInputChange(event, key)} onClick={(event) => this.stopPropagation(event)} onKeyDown={(event) => this.handleKeyDown(event)} />
         ) : (
           <span>{this.values[key]}</span>
         )
@@ -94,8 +105,18 @@ export class MessageSegment {
         onDrop={(event) => this.handleDrop(event)}
         onDragOver={(event) => this.handleDragOver(event)}
         data-index={this.index}
+        style={{ width: '100%' }}
       >
-        {this.renderMessage()}
+        <div class="segment-content">
+          {this.renderMessage()}
+        </div>
+        {this.isEditMode && this.segment.removable && (
+          <div class="segment-delete">
+            <button class="delete-button" onClick={(event) => { event.stopPropagation(); this.handleDelete(); }}>
+              Delete
+            </button>
+          </div>
+        )}
       </div>
     );
   }

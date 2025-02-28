@@ -10,3 +10,26 @@
 .column:first-child {
   border-right: 1px solid #ddd;
 }
+
+.segment-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.delete-button {
+  background: #ff4d4d;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  padding: 5px 10px;
+  color: white;
+  border-radius: 3px;
+}
+
+message-segment {
+  width: 100%;
+}

@@ -20,7 +20,7 @@ export namespace Components {
          * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
          */
         "second-object"?: any;
-        "segment": { message: string; condition?: string; draggable?: boolean };
+        "segment": { message: string; condition?: string; draggable?: boolean; removable?: boolean };
         "values": { [key: string]: string };
     }
     interface PreviewRender {
@@ -53,6 +53,7 @@ declare global {
         "segmentDragStart": number;
         "segmentDrop": { fromIndex: number; toIndex: number };
         "inputChange": { key: string; value: string };
+        "deleteSegment": number;
     }
     interface HTMLMessageSegmentElement extends Components.MessageSegment, HTMLStencilElement {
         addEventListener<K extends keyof HTMLMessageSegmentElementEventMap>(type: K, listener: (this: HTMLMessageSegmentElement, ev: MessageSegmentCustomEvent<HTMLMessageSegmentElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -90,6 +91,7 @@ declare namespace LocalJSX {
          */
         "first-object"?: any;
         "index"?: number;
+        "onDeleteSegment"?: (event: MessageSegmentCustomEvent<number>) => void;
         "onInputChange"?: (event: MessageSegmentCustomEvent<{ key: string; value: string }>) => void;
         "onSegmentDragStart"?: (event: MessageSegmentCustomEvent<number>) => void;
         "onSegmentDrop"?: (event: MessageSegmentCustomEvent<{ fromIndex: number; toIndex: number }>) => void;
@@ -98,7 +100,7 @@ declare namespace LocalJSX {
          * @deprecated use camelCase instead. Support for dash-casing will be removed in Stencil v5.
          */
         "second-object"?: any;
-        "segment"?: { message: string; condition?: string; draggable?: boolean };
+        "segment"?: { message: string; condition?: string; draggable?: boolean; removable?: boolean };
         "values"?: { [key: string]: string };
     }
     interface PreviewRender {

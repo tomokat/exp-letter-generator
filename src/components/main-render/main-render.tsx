@@ -9,14 +9,14 @@ export class MainRender {
   @State() firstObject = { name: 'John Doe', refId: 123, type: 'claim', urgency: 'high' };
   @State() secondObject = { id: 456, amount: 1000, status: 'stop', reason: 'missing information' };
   @State() segments = [
-    { message: 'Hello ${firstObject.name},', draggable: false },
-    { message: 'With regards to your ${firstObject.refId} of your ${firstObject.type}', draggable: true },
-    { message: 'We will be shortly reaching out to you', condition: "firstObject.type === 'claim' && secondObject.status === 'proceed'", draggable: true },
-    { message: 'We are sorry to inform you that we cannot process your claim due to ${secondObject.reason}', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true },
-    { message: 'Please send us copy of receipt matching your purchase amount of $${secondObject.amount} and we will process your claim as quickly as we can', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true },
-    { message: 'We would like to inform you that your ${firstObject.refId} is in process', condition: "firstObject.type === 'normal'", draggable: true },
-    { message: 'We want to let you know this great opportunity with you today', condition: "firstObject.type === 'review'", draggable: true },
-    { message: 'Thank you for your time', draggable: false }
+    { message: 'Hello ${firstObject.name},', draggable: false, removable: false },
+    { message: 'With regards to your ${firstObject.refId} of your ${firstObject.type}', draggable: true, removable: true },
+    { message: 'We will be shortly reaching out to you', condition: "firstObject.type === 'claim' && secondObject.status === 'proceed'", draggable: true, removable: true },
+    { message: 'We are sorry to inform you that we cannot process your claim due to ${secondObject.reason}', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true, removable: true },
+    { message: 'Please send us copy of receipt matching your purchase amount of $${secondObject.amount} and we will process your claim as quickly as we can', condition: "firstObject.type === 'claim' && secondObject.status === 'stop'", draggable: true, removable: true },
+    { message: 'We would like to inform you that your ${firstObject.refId} is in process', condition: "firstObject.type === 'normal'", draggable: true, removable: true },
+    { message: 'We want to let you know this great opportunity with you today', condition: "firstObject.type === 'review'", draggable: true, removable: true },
+    { message: 'Thank you for your time', draggable: false, removable: false }
   ];
   @State() values: { [key: string]: string }[] = [];
 
@@ -70,6 +70,15 @@ export class MainRender {
     this.values = values;
   }
 
+  handleDeleteSegment(index) {
+    const segments = [...this.segments];
+    const values = [...this.values];
+    segments.splice(index, 1);
+    values.splice(index, 1);
+    this.segments = segments;
+    this.values = values;
+  }
+
   render() {
     if (!this.firstObject || !this.secondObject) {
       return null;
@@ -79,7 +88,7 @@ export class MainRender {
       <div class="container">
         <div class="column">
           {this.segments.map((segment, index) => (
-            <div>
+            <div class="segment-container">
               <message-segment
                 segment={segment}
                 firstObject={this.firstObject}
@@ -89,6 +98,7 @@ export class MainRender {
                 onSegmentDragStart={(event) => this.handleSegmentDragStart(event)}
                 onSegmentDrop={(event) => this.handleSegmentDrop(event)}
                 onInputChange={(event) => this.handleInputChange(index, event.detail.key, event.detail.value)}
+                onDeleteSegment={(event) => this.handleDeleteSegment(event.detail)}
               ></message-segment>
             </div>
           ))}

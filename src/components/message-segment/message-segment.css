@@ -1,14 +1,36 @@
 .segment {
+  display: flex;
   padding: 10px;
   margin: 10px 0;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 5px;
   cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .segment.fixed {
   background-color: #e0e0e0;
+}
+
+.segment-content {
+  flex: 1;
+}
+
+.segment-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-button {
+  background: #ff4d4d;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  color: white;
+  border-radius: 3px;
 }
 
 .segment textarea {
