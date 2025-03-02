@@ -18,7 +18,15 @@ export class MainRender {
     { message: 'We want to let you know this great opportunity with you today', fr_message: 'Nous voulons vous faire part de cette grande opportunité aujourd\'hui', condition: "firstObject.type === 'review'", draggable: true, removable: true },
     { message: 'Thank you for your time', fr_message: 'Merci pour votre temps', draggable: false, removable: false }
   ];
+  @State() additionalSegments = [
+    { message: 'This is a dummy message 1', fr_message: 'Ceci est un message factice 1', draggable: true, removable: true },
+    { message: 'This is a dummy message 2', fr_message: 'Ceci est un message factice 2', draggable: true, removable: true },
+    { message: 'This is a dummy message 3', fr_message: 'Ceci est un message factice 3', draggable: true, removable: true },
+    { message: 'This is a dummy message 4', fr_message: 'Ceci est un message factice 4', draggable: true, removable: true },
+    { message: 'This is a dummy message 5', fr_message: 'Ceci est un message factice 5', draggable: true, removable: true }
+  ];
   @State() values: { [key: string]: string }[] = [];
+  @State() isExpanded: boolean = true;
 
   componentWillLoad() {
     this.initializeValues();
@@ -79,6 +87,10 @@ export class MainRender {
     this.values = values;
   }
 
+  toggleExpand() {
+    this.isExpanded = !this.isExpanded;
+  }
+
   render() {
     if (!this.firstObject || !this.secondObject) {
       return null;
@@ -86,7 +98,27 @@ export class MainRender {
 
     return (
       <div class="container">
-        <div class="column">
+        <div class={`column ${this.isExpanded ? 'expanded' : 'collapsed'}`}>
+          <button class="toggle-button" onClick={() => this.toggleExpand()}>
+            {this.isExpanded ? 'Collapse' : 'Expand'}
+          </button>
+          {this.isExpanded && (
+            <div>
+              {this.additionalSegments.map((segment, index) => (
+                <div class="segment-container">
+                  <message-segment
+                    segment={segment}
+                    firstObject={this.firstObject}
+                    secondObject={this.secondObject}
+                    index={index}
+                    values={{}}
+                  ></message-segment>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div class="column main-column">
           {this.segments.map((segment, index) => (
             <div class="segment-container">
               <message-segment
@@ -103,7 +135,7 @@ export class MainRender {
             </div>
           ))}
         </div>
-        <div class="column">
+        <div class="column preview-column">
           <preview-render segments={this.segments} firstObject={this.firstObject} secondObject={this.secondObject} values={this.values}></preview-render>
         </div>
       </div>

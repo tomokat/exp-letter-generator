@@ -3,12 +3,38 @@
 }
 
 .column {
-  flex: 1;
   padding: 10px;
+  transition: width 0.3s ease;
 }
 
 .column:first-child {
   border-right: 1px solid #ddd;
+}
+
+.column.expanded {
+  width: 200px;
+}
+
+.column.collapsed {
+  width: 50px;
+}
+
+.main-column {
+  flex: 2;
+}
+
+.preview-column {
+  flex: 1;
+}
+
+.toggle-button {
+  background: #007bff;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-bottom: 10px;
 }
 
 .segment-container {
