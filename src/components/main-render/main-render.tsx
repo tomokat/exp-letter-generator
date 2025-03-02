@@ -6,8 +6,8 @@ import { Component, h, State } from '@stencil/core';
   shadow: true,
 })
 export class MainRender {
-  @State() firstObject = { name: 'John Doe', refId: 123, type: 'claim', urgency: 'high' };
-  @State() secondObject = { id: 456, amount: 1000, status: 'stop', reason: 'missing information' };
+  @State() firstObject = { name: 'John Doe', refId: 123, type: 'claim', urgency: 'high', severity: 'critical' };
+  @State() secondObject = { id: 456, amount: 1000, status: 'stop', reason: 'missing information', processTime: 3};
   @State() segments = [
     { message: 'Hello ${firstObject.name},', fr_message: 'Bonjour ${firstObject.name},', draggable: false, removable: false },
     { message: 'With regards to your ${firstObject.refId} of your ${firstObject.type}', fr_message: 'En ce qui concerne votre ${firstObject.refId} de votre ${firstObject.type}', draggable: true, removable: true },
@@ -19,13 +19,14 @@ export class MainRender {
     { message: 'Thank you for your time', fr_message: 'Merci pour votre temps', draggable: false, removable: false }
   ];
   @State() additionalSegments = [
-    { message: 'This is a dummy message 1', fr_message: 'Ceci est un message factice 1', draggable: true, removable: true },
-    { message: 'This is a dummy message 2', fr_message: 'Ceci est un message factice 2', draggable: true, removable: true },
-    { message: 'This is a dummy message 3', fr_message: 'Ceci est un message factice 3', draggable: true, removable: true },
-    { message: 'This is a dummy message 4', fr_message: 'Ceci est un message factice 4', draggable: true, removable: true },
-    { message: 'This is a dummy message 5', fr_message: 'Ceci est un message factice 5', draggable: true, removable: true }
+    { message: 'If you want us to email a copy, please let us know', fr_message: 'Si vous souhaitez que nous envoyions une copie par e-mail, veuillez nous le faire savoir', draggable: true, removable: true },
+    { message: 'For your ${firstObject.urgency} request, we would process it shortly', fr_message: 'Pour votre demande ${firstObject.urgency}, nous la traiterons sous peu', draggable: true, removable: true },
+    { message: 'For your case since amount of ${secondObject.amount} is below threshold, we would not process your request', fr_message: 'Pour votre cas, puisque le montant de ${secondObject.amount} est inférieur au seuil, nous ne traiterons pas votre demande', draggable: true, removable: true },
+    { message: 'Estimated processing time of your order will be ${secondObject.processTime}', fr_message: 'Le délai de traitement estimé de votre commande sera de ${secondObject.processTime}', draggable: true, removable: true },
+    { message: 'For your ${firstObject.severity} request, we are sorry for taking long time to get back to you', fr_message: 'Pour votre demande ${firstObject.severity}, nous sommes désolés de prendre autant de temps pour vous répondre', draggable: true, removable: true }
   ];
   @State() values: { [key: string]: string }[] = [];
+  @State() valuesForAdditionalSegments: { [key: string]: string }[] = [];
   @State() isExpanded: boolean = true;
 
   componentWillLoad() {
@@ -33,17 +34,19 @@ export class MainRender {
   }
 
   initializeValues() {
-    this.values = this.segments.map(segment => {
-      const message = segment.message;
-      const regex = /\${(.*?)}/g;
-      const values = {};
-      let match;
-      while ((match = regex.exec(message)) !== null) {
-        const key = match[1];
-        values[key] = this.getValueForKey(key);
-      }
-      return values;
-    });
+    this.values = this.segments.map(segment => this.extractValues(segment.message));
+    this.valuesForAdditionalSegments = this.additionalSegments.map(segment => this.extractValues(segment.message));
+  }
+
+  extractValues(message: string): { [key: string]: string } {
+    const regex = /\${(.*?)}/g;
+    const values = {};
+    let match;
+    while ((match = regex.exec(message)) !== null) {
+      const key = match[1];
+      values[key] = this.getValueForKey(key);
+    }
+    return values;
   }
 
   getValueForKey(key: string): string {
@@ -57,11 +60,16 @@ export class MainRender {
   }
 
   handleSegmentDragStart(event) {
+    //if (!event.target.draggable) return;
+    //event.dataTransfer.setData('text/plain', JSON.stringify({ type: 'main', index: event.detail }));
     console.log('Drag start:', event.detail);
   }
 
   handleSegmentDrop(event) {
+    //const { type, index: fromIndex } = JSON.parse(event.dataTransfer.getData('text/plain'));
+    //if (type !== 'main') return;
     const { fromIndex, toIndex } = event.detail;
+    //const toIndex = event.detail.toIndex;
     const segments = [...this.segments];
     const values = [...this.values];
     const [movedSegment] = segments.splice(fromIndex, 1);
@@ -83,6 +91,17 @@ export class MainRender {
     const values = [...this.values];
     segments.splice(index, 1);
     values.splice(index, 1);
+    this.segments = segments;
+    this.values = values;
+  }
+
+  handleAdditionalSegmentDrop(event) {
+    const { type, index: fromIndex } = JSON.parse(event.dataTransfer.getData('text/plain'));
+    if (type !== 'additional') return;
+
+    const additionalSegment = this.additionalSegments[fromIndex];
+    const segments = [...this.segments, additionalSegment];
+    const values = [...this.values, this.valuesForAdditionalSegments[fromIndex]];
     this.segments = segments;
     this.values = values;
   }
@@ -111,14 +130,16 @@ export class MainRender {
                     firstObject={this.firstObject}
                     secondObject={this.secondObject}
                     index={index}
-                    values={{}}
+                    values={this.valuesForAdditionalSegments[index]}
+                    type="additional"
+                    onSegmentDragStart={(event) => this.handleSegmentDragStart(event)}
                   ></message-segment>
                 </div>
               ))}
             </div>
           )}
         </div>
-        <div class="column main-column">
+        <div class="column main-column" onDrop={(event) => this.handleAdditionalSegmentDrop(event)} onDragOver={(event) => event.preventDefault()}>
           {this.segments.map((segment, index) => (
             <div class="segment-container">
               <message-segment
@@ -127,6 +148,7 @@ export class MainRender {
                 secondObject={this.secondObject}
                 index={index}
                 values={this.values[index]}
+                type="main"
                 onSegmentDragStart={(event) => this.handleSegmentDragStart(event)}
                 onSegmentDrop={(event) => this.handleSegmentDrop(event)}
                 onInputChange={(event) => this.handleInputChange(index, event.detail.key, event.detail.value)}

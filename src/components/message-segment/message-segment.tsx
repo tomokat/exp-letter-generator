@@ -11,6 +11,7 @@ export class MessageSegment {
   @Prop() secondObject: any;
   @Prop() index: number;
   @Prop() values: { [key: string]: string };
+  @Prop() type: 'main' | 'additional';
   @State() isEditMode: boolean = false;
 
   @Event() segmentDragStart: EventEmitter<number>;
@@ -38,10 +39,14 @@ export class MessageSegment {
   }
 
   toggleEditMode() {
-    this.isEditMode = !this.isEditMode;
+    if (this.type === 'main') {
+      this.isEditMode = !this.isEditMode;
+    }
   }
 
   handleDragStart(event) {
+    //const type = this.type;
+    //event.dataTransfer.setData('text/plain', JSON.stringify({ type, index: this.index }));
     event.dataTransfer.setData('text/plain', this.index.toString());
     this.segmentDragStart.emit(this.index);
   }
@@ -50,6 +55,7 @@ export class MessageSegment {
     event.preventDefault();
     const fromIndex = parseInt(event.dataTransfer.getData('text/plain'), 10);
     const toIndex = this.index;
+    console.log('Drop:', fromIndex, toIndex);
     this.segmentDrop.emit({ fromIndex, toIndex });
   }
 
@@ -80,12 +86,17 @@ export class MessageSegment {
 
     while ((match = regex.exec(message)) !== null) {
       const key = match[1];
+      const value = this.values[key] || this.getValueForKey(key);
       parts.push(message.substring(lastIndex, match.index));
       parts.push(
         this.isEditMode ? (
-          <input type="text" value={this.values[key]} onInput={(event) => this.handleInputChange(event, key)} onClick={(event) => this.stopPropagation(event)} onKeyDown={(event) => this.handleKeyDown(event)} />
+          <input type="text" value={value} 
+            onInput={(event) => this.handleInputChange(event, key)}
+            onClick={(event) => this.stopPropagation(event)}
+            onKeyDown={(event) => this.handleKeyDown(event)}
+            onFocus={(event) => (event.target as HTMLInputElement).select()} />
         ) : (
-          <span>{this.values[key]}</span>
+          <span>{value}</span>
         )
       );
       lastIndex = regex.lastIndex;
@@ -93,6 +104,16 @@ export class MessageSegment {
     parts.push(message.substring(lastIndex));
 
     return parts;
+  }
+
+  getValueForKey(key: string): string {
+    const [objectName, propertyName] = key.split('.');
+    if (objectName === 'firstObject') {
+      return this.firstObject[propertyName];
+    } else if (objectName === 'secondObject') {
+      return this.secondObject[propertyName];
+    }
+    return '';
   }
 
   render() {

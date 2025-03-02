@@ -21,6 +21,7 @@ export namespace Components {
          */
         "second-object"?: any;
         "segment": { message: string; fr_message: string; condition?: string; draggable?: boolean; removable?: boolean };
+        "type": 'main' | 'additional';
         "values": { [key: string]: string };
     }
     interface PreviewRender {
@@ -101,6 +102,7 @@ declare namespace LocalJSX {
          */
         "second-object"?: any;
         "segment"?: { message: string; fr_message: string; condition?: string; draggable?: boolean; removable?: boolean };
+        "type"?: 'main' | 'additional';
         "values"?: { [key: string]: string };
     }
     interface PreviewRender {

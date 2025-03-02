@@ -1,4 +1,4 @@
-import { Component, Prop, h } from '@stencil/core';
+import { Component, Prop, h, Watch } from '@stencil/core';
 
 @Component({
   tag: 'preview-render',
@@ -10,6 +10,12 @@ export class PreviewRender {
   @Prop() firstObject: any;
   @Prop() secondObject: any;
   @Prop() values: { [key: string]: string }[];
+
+  @Watch('segments')
+  @Watch('values')
+  handlePropChange() {
+    this.render();
+  }
 
   evaluateCondition(condition: string): boolean {
     try {
